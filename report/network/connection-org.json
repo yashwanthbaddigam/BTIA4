@@ -1,0 +1,39 @@
+{
+  "name": "supply-network",
+  "version": "1.0.0",
+  "client": {
+    "organization": "Manufacturer",
+    "connection": {
+      "timeout": {
+        "peer": {
+          "endorser": "300s"
+        }
+      }
+    }
+  },
+  "organizations": {
+    "Manufacturer": {
+      "mspid": "ManufacturerMSP",
+      "peers": [
+        "peer0.manufacturer.example.com"
+      ],
+      "certificateAuthorities": []
+    }
+  },
+  "peers": {
+    "peer0.manufacturer.example.com": {
+      "url": "grpc://localhost:7051",
+      "grpcOptions": {
+        "ssl-target-name-override": "peer0.manufacturer.example.com"
+      },
+      "tlsCACerts": {
+        "path": "../crypto-config/peerOrganizations/manufacturer.example.com/peers/peer0.manufacturer.example.com/tls/ca.crt"
+      }
+    }
+  },
+  "orderers": {
+    "orderer.example.com": {
+      "url": "grpc://localhost:7050"
+    }
+  }
+}

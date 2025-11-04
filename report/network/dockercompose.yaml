@@ -1,0 +1,65 @@
+version: '2'
+
+services:
+
+  orderer.example.com:
+    image: hyperledger/fabric-orderer:2.2
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=info
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    volumes:
+      - ../channel-artifacts:/var/hyperledger/orderer/orderer.genesis.block:ro
+      - ../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp:ro
+    ports:
+      - 7050:7050
+
+  peer0.manufacturer.example.com:
+    image: hyperledger/fabric-peer:2.2
+    environment:
+      - CORE_PEER_ID=peer0.manufacturer.example.com
+      - CORE_PEER_ADDRESS=peer0.manufacturer.example.com:7051
+      - CORE_PEER_LOCALMSPID=ManufacturerMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+    volumes:
+      - ../crypto-config/peerOrganizations/manufacturer.example.com/peers/peer0.manufacturer.example.com/msp:/etc/hyperledger/msp/peer:ro
+    ports:
+      - 7051:7051
+
+  peer0.distributor.example.com:
+    image: hyperledger/fabric-peer:2.2
+    environment:
+      - CORE_PEER_ID=peer0.distributor.example.com
+      - CORE_PEER_ADDRESS=peer0.distributor.example.com:9051
+      - CORE_PEER_LOCALMSPID=DistributorMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer
+    volumes:
+      - ../crypto-config/peerOrganizations/distributor.example.com/peers/peer0.distributor.example.com/msp:/etc/hyperledger/msp/peer:ro
+    ports:
+      - 9051:9051
+
+  peer0.retailer.example.com:
+    image: hyperledger/fabric-peer:2.2
+    environment:
+      - CORE_PEER_ID=peer0.retailer.example.com
+      - CORE_PEER_ADDRESS=peer0.retailer.example.com:11051
+      - CORE_PEER_LOCALMSPID=RetailerMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer
+    volumes:
+      - ../crypto-config/peerOrganizations/retailer.example.com/peers/peer0.retailer.example.com/msp:/etc/hyperledger/msp/peer:ro
+    ports:
+      - 11051:11051
+
+  couchdb0:
+    image: couchdb:3.1
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=pass
+    ports:
+      - 5984:5984

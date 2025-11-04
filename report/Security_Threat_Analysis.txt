@@ -1,0 +1,34 @@
+# Supply Chain Blockchain Network (ICT4415)
+
+## Overview
+This repository contains a minimal Hyperledger Fabric test network and chaincode to simulate a supply chain with three organizations:
+- Manufacturer
+- Distributor
+- Retailer
+
+Chaincode implements shipment creation, transfer, and receipt, and supports querying shipment state.
+
+---
+
+## Files / Structure
+See the included file tree. Key items:
+- `network/` — network configs, scripts to generate crypto & start network
+- `chaincode/shipment/` — Go chaincode
+- `application/` — simple Node.js client to submit transactions
+- `report/` — security analysis
+
+---
+
+## Prerequisites
+- Docker & Docker Compose
+- Hyperledger Fabric binaries (`cryptogen`, `configtxgen`, `peer`) in PATH — see Fabric docs
+- Go (1.16+) for building chaincode
+- Node.js (12+) & npm for the application
+
+---
+
+## Quick start (development)
+1. Generate crypto material and start network:
+   ```bash
+   cd network
+   ./scripts/startNetwork.sh
